@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="480.0" prefWidth="600.0" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/8.0.171"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.jpierre.controller.GameController">
+    <Pane prefHeight="440.0" prefWidth="370.0" style="-fx-border-color: grey; -fx-border-width: 1px;">
+        <HBox.margin>
+            <Insets right="30.0"/>
+        </HBox.margin>
+        <Canvas height="440.0" width="370.0" fx:id="gameCanvas"/>
+    </Pane>
+    <VBox alignment="TOP_CENTER" prefHeight="440.0" prefWidth="160.0">
+        <padding>
+            <Insets top="20.0"/>
+        </padding>
+        <Label text="Score:"/>
+        <Label text="0" fx:id="scoreValueLabel"/>
+    </VBox>
+</HBox>
