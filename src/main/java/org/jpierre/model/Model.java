@@ -26,19 +26,38 @@ public class Model {
     }
 
     /**
-     * Sets grid positions accordingly for the coordinate of each snake segment.
+     * Sets all grid positions that contain corresponding snake segments.
+     * to
      */
-    void addSnakeToGrid() {
+    private void addSnakeToGrid() {
         for(Pair<Integer,Integer> coords : snake.getAllSegments()) {
             grid[coords.getKey()][coords.getValue()] = SNAKE_SEGMENT;
         }
     }
 
     /**
-     * Returns all snake segments in this game.
+     * Clears all grid positions that contain corresponding snake segments.
      */
-    public ArrayList<Pair<Integer,Integer>> getSnakeSegments() {
-        return snake.getAllSegments();
+    private void removeSnakeFromGrid() {
+        for(Pair<Integer,Integer> coords : snake.getAllSegments()) {
+            grid[coords.getKey()][coords.getValue()] = 0;
+        }
+    }
+
+    /**
+     * Returns the snake in this game.
+     */
+    public Snake getSnake() {
+        return snake;
+    }
+
+    /**
+     * Updates the current model during a game loop.
+     */
+    public void updateModel() {
+        removeSnakeFromGrid();
+        snake.move();
+        addSnakeToGrid();
     }
 
 }

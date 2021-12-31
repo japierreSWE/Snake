@@ -20,6 +20,12 @@ public class GameLoopHandler extends AnimationTimer {
     GraphicsContext gc;
     Model model;
 
+    //The amount of nanoseconds it takes for a move to happen in game.
+    long timeToMove = (long)Math.pow(10, 9);
+
+    //The timestamp of our last move.
+    Long lastMoveTimestamp;
+
     public GameLoopHandler() {}
 
     public GameLoopHandler(Canvas canvas, Model model) {
@@ -41,8 +47,8 @@ public class GameLoopHandler extends AnimationTimer {
      * Draws the grid for the user interface.
      */
     void drawGrid() {
-        double vertSpace = canvas.getWidth() / (Model.NUM_COLUMNS + 1);
-        double horSpace = canvas.getHeight() / (Model.NUM_ROWS + 1);
+        double vertSpace = canvas.getWidth() / Model.NUM_COLUMNS;
+        double horSpace = canvas.getHeight() / Model.NUM_ROWS;
 
         for(double currX = vertSpace; currX<canvas.getWidth(); currX+=vertSpace) {
             gc.setStroke(Color.BLACK);
@@ -60,9 +66,9 @@ public class GameLoopHandler extends AnimationTimer {
      * This method draws all of the snake segments.
      */
     void drawSnake() {
-        ArrayList<Pair<Integer,Integer>> snakeSegments = model.getSnakeSegments();
-        double colSpace = canvas.getWidth() / (Model.NUM_COLUMNS + 1);
-        double rowSpace = canvas.getHeight() / (Model.NUM_ROWS + 1);
+        ArrayList<Pair<Integer,Integer>> snakeSegments = model.getSnake().getAllSegments();
+        double colSpace = canvas.getWidth() / Model.NUM_COLUMNS;
+        double rowSpace = canvas.getHeight() / Model.NUM_ROWS;
 
         for(Pair<Integer,Integer> coords : snakeSegments) {
             gc.setFill(Color.GREEN);
@@ -76,6 +82,16 @@ public class GameLoopHandler extends AnimationTimer {
      */
     @Override
     public void handle(long l) {
+        if(lastMoveTimestamp == null) {
+            lastMoveTimestamp = l;
+        }
         updateView();
+
+        //if the time since our last move is >= timeToMove, we should move.
+        if(l - lastMoveTimestamp >= timeToMove) {
+            model.updateModel();
+            lastMoveTimestamp = l;
+        }
+
     }
 }
