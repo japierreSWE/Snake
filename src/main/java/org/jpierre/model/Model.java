@@ -19,6 +19,9 @@ public class Model {
     //The grid that contains snake segments and fruit.
     private int[][] grid;
 
+    //Whether the game is paused.
+    boolean paused = false;
+
     public Model() {
         this.snake = new Snake();
         grid = new int[NUM_ROWS][NUM_COLUMNS];
@@ -60,4 +63,11 @@ public class Model {
         addSnakeToGrid();
     }
 
+    public void togglePause() {
+        paused = !paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
 }

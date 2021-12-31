@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Pair;
 import org.jpierre.model.Model;
 import org.jpierre.model.Snake;
@@ -25,6 +26,9 @@ public class GameLoopHandler extends AnimationTimer {
     //The set of keys being currently pressed.
     ArrayList<String> keysPressed;
 
+    //Keys that were being pressed in the previous loop.
+    ArrayList<String> previousKeysPressed;
+
     //The amount of nanoseconds it takes for a move to happen in game.
     long timeToMove = (long)Math.pow(10, 9);
 
@@ -39,15 +43,23 @@ public class GameLoopHandler extends AnimationTimer {
         this.model = model;
 
         this.keysPressed = new ArrayList<>();
+        this.previousKeysPressed = new ArrayList<>();
     }
 
     /**
      * Clears and draws the user interface again, updating it if necessary.
      */
-    void updateView() {
+    void drawView() {
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         drawGrid();
         drawSnake();
+
+        if(model.isPaused()) {
+            gc.setFont(new Font("System", 20));
+            gc.setFill(Color.BLACK);
+            gc.fillText("Paused! Press P again to unpause.", (canvas.getWidth()/2) - 150, canvas.getHeight()/2, 300);
+        }
+
     }
 
     /**
@@ -87,28 +99,38 @@ public class GameLoopHandler extends AnimationTimer {
      * Responds accordingly to any input the user is providing.
      */
     void handleInput() {
-        String keyInput = keysPressed.get(0);
 
-        switch(keyInput) {
-            case "UP":
-            case "W":
-                model.getSnake().setDirection(Snake.UP);
-                break;
+        ArrayList<String> actionableInput = new ArrayList<>(keysPressed);
+        actionableInput.removeAll(previousKeysPressed);
 
-            case "DOWN":
-            case "S":
-                model.getSnake().setDirection(Snake.DOWN);
-                break;
+        if(!actionableInput.isEmpty()) {
+            String keyInput = actionableInput.get(0);
 
-            case "LEFT":
-            case "A":
-                model.getSnake().setDirection(Snake.LEFT);
-                break;
+            switch(keyInput) {
+                case "UP":
+                case "W":
+                    model.getSnake().setDirection(Snake.UP);
+                    break;
 
-            case "RIGHT":
-            case "D":
-                model.getSnake().setDirection(Snake.RIGHT);
-                break;
+                case "DOWN":
+                case "S":
+                    model.getSnake().setDirection(Snake.DOWN);
+                    break;
+
+                case "LEFT":
+                case "A":
+                    model.getSnake().setDirection(Snake.LEFT);
+                    break;
+
+                case "RIGHT":
+                case "D":
+                    model.getSnake().setDirection(Snake.RIGHT);
+                    break;
+
+                case "P":
+                    model.togglePause();
+                    break;
+            }
         }
 
     }
@@ -126,7 +148,9 @@ public class GameLoopHandler extends AnimationTimer {
                 if(!keysPressed.contains(keyEvent.getCode().toString()))
                     keysPressed.add(keyEvent.getCode().toString());
             });
-            scene.setOnKeyReleased(keyEvent -> keysPressed.remove(keyEvent.getCode().toString()));
+            scene.setOnKeyReleased(keyEvent -> {
+                keysPressed.remove(keyEvent.getCode().toString());
+            });
         }
         System.out.println(keysPressed.toString());
         if(lastMoveTimestamp == null) {
@@ -137,13 +161,20 @@ public class GameLoopHandler extends AnimationTimer {
             handleInput();
         }
 
-        updateView();
 
-        //if the time since our last move is >= timeToMove, we should move.
-        if(l - lastMoveTimestamp >= timeToMove) {
-            model.updateModel();
-            lastMoveTimestamp = l;
+        drawView();
+
+        if(!model.isPaused()) {
+            //if the time since our last move is >= timeToMove, we should move.
+            if(l - lastMoveTimestamp >= timeToMove) {
+                model.updateModel();
+                lastMoveTimestamp = l;
+            }
         }
+
+        //update the previous keys pressed.
+        previousKeysPressed.clear();
+        previousKeysPressed.addAll(keysPressed);
 
     }
 }
