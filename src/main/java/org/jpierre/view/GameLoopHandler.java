@@ -4,6 +4,10 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
+import org.jpierre.model.Model;
+
+import java.util.ArrayList;
 
 /**
  * Manages the game loop and carries out all actions
@@ -14,12 +18,14 @@ public class GameLoopHandler extends AnimationTimer {
 
     Canvas canvas;
     GraphicsContext gc;
+    Model model;
 
     public GameLoopHandler() {}
 
-    public GameLoopHandler(Canvas canvas) {
+    public GameLoopHandler(Canvas canvas, Model model) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
+        this.model = model;
     }
 
     /**
@@ -28,17 +34,15 @@ public class GameLoopHandler extends AnimationTimer {
     void updateView() {
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         drawGrid();
+        drawSnake();
     }
 
     /**
      * Draws the grid for the user interface.
      */
     void drawGrid() {
-        //number of vertical lines: 20
-        //number of horizontal lines: 19
-
-        double vertSpace = canvas.getWidth() / (20 + 1);
-        double horSpace = canvas.getHeight() / (19 + 1);
+        double vertSpace = canvas.getWidth() / (Model.NUM_COLUMNS + 1);
+        double horSpace = canvas.getHeight() / (Model.NUM_ROWS + 1);
 
         for(double currX = vertSpace; currX<canvas.getWidth(); currX+=vertSpace) {
             gc.setStroke(Color.BLACK);
@@ -50,6 +54,20 @@ public class GameLoopHandler extends AnimationTimer {
             gc.strokeLine(0, currY, canvas.getWidth(), currY);
         }
 
+    }
+
+    /**
+     * This method draws all of the snake segments.
+     */
+    void drawSnake() {
+        ArrayList<Pair<Integer,Integer>> snakeSegments = model.getSnakeSegments();
+        double colSpace = canvas.getWidth() / (Model.NUM_COLUMNS + 1);
+        double rowSpace = canvas.getHeight() / (Model.NUM_ROWS + 1);
+
+        for(Pair<Integer,Integer> coords : snakeSegments) {
+            gc.setFill(Color.GREEN);
+            gc.fillRect(colSpace * coords.getValue(), rowSpace * coords.getKey(), colSpace, rowSpace);
+        }
     }
 
     /**
