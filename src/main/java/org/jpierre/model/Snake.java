@@ -24,10 +24,10 @@ public class Snake {
     //The direction the snake is moving in.
     private int direction;
 
-    static final int UP = 1;
-    static final int DOWN = 2;
-    static final int LEFT = 3;
-    static final int RIGHT = 4;
+    public static final int UP = 1;
+    public static final int DOWN = 2;
+    public static final int LEFT = 3;
+    public static final int RIGHT = 4;
 
     public Snake() {
         int vertMid = Model.NUM_ROWS / 2;
@@ -63,11 +63,11 @@ public class Snake {
 
         switch(direction) {
             case UP:
-                offset = new Pair<>(1, 0);
+                offset = new Pair<>(-1, 0);
                 break;
 
             case DOWN:
-                offset = new Pair<>(-1, 0);
+                offset = new Pair<>(1, 0);
                 break;
 
             case LEFT:
@@ -91,4 +91,17 @@ public class Snake {
         }
     }
 
+    public void setDirection(int newDirection) {
+
+        boolean isValidDirection = !((direction == LEFT && newDirection == RIGHT) ||
+                (direction == RIGHT && newDirection == LEFT) ||
+                (direction == UP && newDirection == DOWN) ||
+                (direction == DOWN && newDirection == UP));
+
+        //If this new direction doesn't cause the snake
+        //to move into itself, then we can move.
+        if(isValidDirection) {
+            this.direction = newDirection;
+        }
+    }
 }
