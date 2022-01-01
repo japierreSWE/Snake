@@ -54,7 +54,11 @@ public class GameLoopHandler extends AnimationTimer {
         drawGrid();
         drawSnake();
 
-        if(model.isPaused()) {
+        if(model.hasLost()) {
+            gc.setFont(new Font("System", 20));
+            gc.setFill(Color.BLACK);
+            gc.fillText("You lose! Press R to restart.", (canvas.getWidth()/2) - 125, canvas.getHeight()/2, 300);
+        } else if(model.isPaused()) {
             gc.setFont(new Font("System", 20));
             gc.setFill(Color.BLACK);
             gc.fillText("Paused! Press P again to unpause.", (canvas.getWidth()/2) - 150, canvas.getHeight()/2, 300);
@@ -100,6 +104,8 @@ public class GameLoopHandler extends AnimationTimer {
      */
     void handleInput() {
 
+        //we don't want to act on input that the user was already pressing
+        //during the previous loop.
         ArrayList<String> actionableInput = new ArrayList<>(keysPressed);
         actionableInput.removeAll(previousKeysPressed);
 
@@ -164,7 +170,8 @@ public class GameLoopHandler extends AnimationTimer {
 
         drawView();
 
-        if(!model.isPaused()) {
+        //we should only move if we aren't paused or haven't lost.
+        if(!model.isPaused() || !model.hasLost()) {
             //if the time since our last move is >= timeToMove, we should move.
             if(l - lastMoveTimestamp >= timeToMove) {
                 model.updateModel();
