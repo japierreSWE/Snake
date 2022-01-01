@@ -52,6 +52,7 @@ public class GameLoopHandler extends AnimationTimer {
     void drawView() {
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         drawGrid();
+        drawFruit();
         drawSnake();
 
         if(model.hasLost()) {
@@ -96,6 +97,17 @@ public class GameLoopHandler extends AnimationTimer {
         for(Pair<Integer,Integer> coords : snakeSegments) {
             gc.setFill(Color.GREEN);
             gc.fillRect(colSpace * coords.getValue(), rowSpace * coords.getKey(), colSpace, rowSpace);
+        }
+    }
+
+    void drawFruit() {
+        Pair<Integer,Integer> fruitLocation = model.getFruitLocation();
+        double colSpace = canvas.getWidth() / Model.NUM_COLUMNS;
+        double rowSpace = canvas.getHeight() / Model.NUM_ROWS;
+
+        if(fruitLocation != null) {
+            gc.setFill(Color.RED);
+            gc.fillRect(colSpace * fruitLocation.getValue(), rowSpace * fruitLocation.getKey(), colSpace, rowSpace);
         }
     }
 

@@ -3,6 +3,7 @@ package org.jpierre.model;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Top level model representing the entire game state.
@@ -25,10 +26,15 @@ public class Model {
     //Whether the player has lost.
     boolean hasLost = false;
 
+    //The position on the board where the fruit
+    //is located.
+    Pair<Integer,Integer> fruitLocation;
+
     public Model() {
         this.snake = new Snake();
         grid = new int[NUM_ROWS][NUM_COLUMNS];
         addSnakeToGrid();
+        addFruitToGrid();
     }
 
     /**
@@ -93,9 +99,35 @@ public class Model {
                 removeSnakeFromGrid();
                 snake.move();
                 addSnakeToGrid();
+
+                if(fruitLocation == null) {
+                    addFruitToGrid();
+                }
+
             }
         }
 
+    }
+
+    /**
+     * Places a fruit in an open space on the grid.
+     */
+    private void addFruitToGrid() {
+        ArrayList<Pair<Integer,Integer>> possibleLocations = new ArrayList<>();
+
+        for(int r = 0; r<grid.length; r++) {
+            for(int c = 0; c<grid[r].length; c++) {
+                if(grid[r][c] == 0) {
+                    possibleLocations.add(new Pair<>(r,c));
+                }
+            }
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(possibleLocations.size());
+
+        fruitLocation = possibleLocations.get(index);
+        grid[fruitLocation.getKey()][fruitLocation.getValue()] = FRUIT;
     }
 
     public void togglePause() {
@@ -108,5 +140,9 @@ public class Model {
 
     public boolean hasLost() {
         return hasLost;
+    }
+
+    public Pair<Integer, Integer> getFruitLocation() {
+        return fruitLocation;
     }
 }
