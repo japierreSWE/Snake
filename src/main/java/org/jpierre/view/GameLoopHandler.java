@@ -30,7 +30,7 @@ public class GameLoopHandler extends AnimationTimer {
     ArrayList<String> previousKeysPressed;
 
     //The amount of nanoseconds it takes for a move to happen in game.
-    long timeToMove = (long)Math.pow(10, 9);
+    long timeToMove = (long)(0.1 * Math.pow(10, 9));
 
     //The timestamp of our last move.
     Long lastMoveTimestamp;
@@ -107,10 +107,23 @@ public class GameLoopHandler extends AnimationTimer {
         //we don't want to act on input that the user was already pressing
         //during the previous loop.
         ArrayList<String> actionableInput = new ArrayList<>(keysPressed);
-        actionableInput.removeAll(previousKeysPressed);
+
+        /**
+         * If the key we will accept as input was the same in the previous
+         * game loop, we won't respond to it in the current game loop.
+         */
+        if(!previousKeysPressed.isEmpty() && !actionableInput.isEmpty()) {
+            if(actionableInput.get(0).equals(previousKeysPressed.get(0))) {
+                actionableInput.remove(0);
+            }
+        }
+
+        System.out.println("Actionable input: " + actionableInput.toString());
+        System.out.println("Keys pressed: " + keysPressed.toString());
 
         if(!actionableInput.isEmpty()) {
             String keyInput = actionableInput.get(0);
+            System.out.println("Input: " + keyInput);
 
             switch(keyInput) {
                 case "UP":
@@ -165,7 +178,6 @@ public class GameLoopHandler extends AnimationTimer {
                 keysPressed.remove(keyEvent.getCode().toString());
             });
         }
-        System.out.println(keysPressed.toString());
 
         if(!keysPressed.isEmpty()) {
             handleInput();
