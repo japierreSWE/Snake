@@ -136,6 +136,13 @@ public class GameLoopHandler extends AnimationTimer {
                 case "P":
                     model.togglePause();
                     break;
+
+                case "R":
+                    if(model.hasLost()) {
+                        model = new Model();
+                        //reset move timer.
+                        lastMoveTimestamp = null;
+                    }
             }
         }
 
@@ -159,9 +166,6 @@ public class GameLoopHandler extends AnimationTimer {
             });
         }
         System.out.println(keysPressed.toString());
-        if(lastMoveTimestamp == null) {
-            lastMoveTimestamp = l;
-        }
 
         if(!keysPressed.isEmpty()) {
             handleInput();
@@ -170,8 +174,12 @@ public class GameLoopHandler extends AnimationTimer {
 
         drawView();
 
-        //we should only move if we aren't paused or haven't lost.
-        if(!model.isPaused() || !model.hasLost()) {
+        if(lastMoveTimestamp == null) {
+            lastMoveTimestamp = l;
+        }
+
+        //we should only move if we aren't paused and haven't lost.
+        if(!model.isPaused() && !model.hasLost()) {
             //if the time since our last move is >= timeToMove, we should move.
             if(l - lastMoveTimestamp >= timeToMove) {
                 model.updateModel();
