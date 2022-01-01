@@ -136,6 +136,17 @@ public class Snake {
         return result;
     }
 
+    /**
+     * Adds a new segment to this snake and
+     * returns the position of the new segment.
+     */
+    public Pair<Integer,Integer> createNewSegment() {
+        int numSegments = segments.size();
+        Pair<Integer,Integer> newSegment = previousLocations.get(numSegments);
+        segments.add(newSegment);
+        return newSegment;
+    }
+
     public void setDirection(int newDirection) {
 
         boolean isValidDirection = !((prevDirection == LEFT && newDirection == RIGHT) ||

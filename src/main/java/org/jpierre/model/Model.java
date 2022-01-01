@@ -102,8 +102,17 @@ public class Model {
 
                 if(fruitLocation == null) {
                     addFruitToGrid();
+                } else {
+                    //the fruit is being eaten.
+                    //we should grow the snake,
+                    //remove the fruit and add
+                    //the new snake segment to the grid.
+                    if(nextHeadPosition.equals(fruitLocation)) {
+                        fruitLocation = null;
+                        Pair<Integer,Integer> newSegmentLocation = snake.createNewSegment();
+                        grid[newSegmentLocation.getKey()][newSegmentLocation.getValue()] = SNAKE_SEGMENT;
+                    }
                 }
-
             }
         }
 
