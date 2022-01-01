@@ -130,12 +130,8 @@ public class GameLoopHandler extends AnimationTimer {
             }
         }
 
-        System.out.println("Actionable input: " + actionableInput.toString());
-        System.out.println("Keys pressed: " + keysPressed.toString());
-
         if(!actionableInput.isEmpty()) {
             String keyInput = actionableInput.get(0);
-            System.out.println("Input: " + keyInput);
 
             switch(keyInput) {
                 case "UP":

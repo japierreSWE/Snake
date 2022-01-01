@@ -1,5 +1,7 @@
 package org.jpierre.model;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -30,7 +32,10 @@ public class Model {
     //is located.
     Pair<Integer,Integer> fruitLocation;
 
+    IntegerProperty score;
+
     public Model() {
+        this.score = new SimpleIntegerProperty(0);
         this.snake = new Snake();
         grid = new int[NUM_ROWS][NUM_COLUMNS];
         addSnakeToGrid();
@@ -111,6 +116,7 @@ public class Model {
                         fruitLocation = null;
                         Pair<Integer,Integer> newSegmentLocation = snake.createNewSegment();
                         grid[newSegmentLocation.getKey()][newSegmentLocation.getValue()] = SNAKE_SEGMENT;
+                        score.setValue(score.get() + 1);
                     }
                 }
             }
@@ -153,5 +159,9 @@ public class Model {
 
     public Pair<Integer, Integer> getFruitLocation() {
         return fruitLocation;
+    }
+
+    public IntegerProperty getScore() {
+        return score;
     }
 }

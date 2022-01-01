@@ -1,5 +1,7 @@
 package org.jpierre.controller;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
@@ -20,6 +22,6 @@ public class GameController {
         model = new Model();
         GameLoopHandler gameLoopHandler = new GameLoopHandler(gameCanvas, model);
         gameLoopHandler.start();
+        scoreValueLabel.textProperty().bind(model.getScore().asString());
     }
-
 }

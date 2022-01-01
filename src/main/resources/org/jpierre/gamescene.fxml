@@ -22,6 +22,6 @@
             <Insets top="20.0"/>
         </padding>
         <Label text="Score:"/>
-        <Label text="0" fx:id="scoreValueLabel"/>
+        <Label fx:id="scoreValueLabel"/>
     </VBox>
 </HBox>
