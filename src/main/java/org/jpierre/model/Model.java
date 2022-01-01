@@ -145,6 +145,18 @@ public class Model {
         grid[fruitLocation.getKey()][fruitLocation.getValue()] = FRUIT;
     }
 
+    /**
+     * Resets the game to its initial state.
+     */
+    public void reset() {
+        score.setValue(0);
+        this.snake = new Snake();
+        grid = new int[NUM_ROWS][NUM_COLUMNS];
+        fruitLocation = null;
+        paused = false;
+        hasLost = false;
+    }
+
     public void togglePause() {
         paused = !paused;
     }

@@ -160,7 +160,7 @@ public class GameLoopHandler extends AnimationTimer {
 
                 case "R":
                     if(model.hasLost()) {
-                        model = new Model();
+                        model.reset();
                         //reset move timer.
                         lastMoveTimestamp = null;
                     }
